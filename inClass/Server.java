@@ -3,13 +3,16 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.logging.*;
 
 public class Server{
 
-    ServerSocket server;
     Socket connection;
+    ServerSocket server;
+    ObjectOutputStream output;
     ObjectInputStream input;
     String message;
+    
     public void runServer() {
         try {
             server = new ServerSocket(12345, 100);
