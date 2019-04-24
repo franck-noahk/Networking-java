@@ -12,7 +12,7 @@ public class Server {
     private ObjectOutputStream output;
     private ObjectInputStream input;
     private String message;
-    private int total = 0;
+    private int totalNumberOfConnections = 0;
 
     public void runServer() {
         System.out.println("Running Server on \n");
@@ -23,7 +23,7 @@ public class Server {
                 output = new ObjectOutputStream(connection.getOutputStream());
                 input = new ObjectInputStream(connection.getInputStream());
                 output.writeObject("welcome to my server");     //Writing to the screen and message
-                total += 1; System.out.println("Number of Connections: "+ total);
+                totalNumberOfConnections += 1; System.out.println("Number of Connections: "+ totalNumberOfConnections);
                 output.flush();
                 //try {
                 //   message=(String) input.readObject();total += 1; System.out.println("Number of Connections: "+ total);
