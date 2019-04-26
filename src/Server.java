@@ -1,8 +1,14 @@
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.net.InetAddress;
+import java.net.NetworkInterface;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -12,8 +18,13 @@ public class Server {
     private ObjectOutputStream output;
     private ObjectInputStream input;
     private String message;
+    private static InetAddress ip;
     private static int totalNumberOfConnections = 0;
     private int totalNumberOfErrorConnections = 0;
+    private short clientLength;
+    private String IPAddress;
+    private short length;
+    private static String clientIPAddress;
     public void runServer() {
         System.out.println("Running Server on \n");
         try {
@@ -23,17 +34,41 @@ public class Server {
                  connection = server.accept();
                  output = new ObjectOutputStream(connection.getOutputStream());
                  input = new ObjectInputStream(connection.getInputStream());
-
-
+                 ip = InetAddress.getLocalHost();
+                 NetworkInterface myInterface = NetworkInterface.getByInetAddress(ip);
+                 IPAddress = ip.getHostAddress();
+                 length = myInterface.getInterfaceAddresses().get(0).getNetworkPrefixLength();
                  //------------needs to see if connected computer is on the same network
 
-                 String message = (String) input.readObject();
-                 System.out.println(message);
+//                 String message = (String) input.readObject();
+//                 System.out.println(message);
+//                 Short length = input.readShort();
+//                 System.out.println(length);
+
+                 HashMap myHash = new HashMap();
+                 myHash = (HashMap) input.readObject();
+                 Set set = myHash.entrySet();
+                 Iterator i = set.iterator();
+                 while (i.hasNext()) {
+                     Map.Entry entry = (Map.Entry) i.next();
+                     clientLength =(short) entry.getKey();
+                     clientIPAddress = (String) entry.getValue();
+                 }
+
+                 // checking
+
+                 if (clientLength == length) {
+                     output.writeObject("You are on my LAN, Welcome home young jedi");     //Writing to the screen and messagev
+                 }else{
+                     output.writeObject("You are not on my LAN, Begone!");
+                 }
+
+
 
                  //-----------Right now it just prints exactly what it recieves to the command line
 
                  totalNumberOfConnections++;
-                 output.writeObject("welcome to my server");     //Writing to the screen and message
+
                  System.out.println("Number of Connections: " + totalNumberOfConnections);
                  output.close();
                  input.close();
