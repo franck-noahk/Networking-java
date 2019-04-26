@@ -2,6 +2,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.*;
+import java.util.HashMap;
 
 public class Client {
 
@@ -11,14 +12,21 @@ public class Client {
     private static String message;
     private static Socket client;
     private static String StringB;
+    private static Short subnetMaskLength;
+    private static String IPAddress;
 
     public static void main(String[] args) {
 
         //------------------------------Code from teacher --------------------------------------------------------------
         try{
             ip = InetAddress.getLocalHost();
+            NetworkInterface myInterface = NetworkInterface.getByInetAddress(ip);
 
+
+            subnetMaskLength = myInterface.getInterfaceAddresses().get(0).getNetworkPrefixLength();    //--------- gives 2 digit number
+            IPAddress = ip.getHostAddress();
             System.out.println("Current IP address : " + ip.getHostAddress());
+
 
             NetworkInterface network = null;
 
@@ -45,20 +53,24 @@ public class Client {
 
         Client client = new Client();
         try{
-            client.runclient(args[1],StringB);
+            client.runclient(args[1],subnetMaskLength,IPAddress);
         }catch (ArrayIndexOutOfBoundsException x){
-            client.runclient("127.0.0.1", StringB);
+            client.runclient("127.0.0.1", subnetMaskLength, IPAddress);
         }
 
     }
 
 
-    private void runclient(String commandline, String macAddress){
+    private void runclient(String commandline, short length, String IPAddress){
         try {
             client = new Socket(commandline, 12345);
             output = new ObjectOutputStream(client.getOutputStream());
             input = new ObjectInputStream(client.getInputStream());
-            output.writeObject(macAddress);
+
+            HashMap myMap = new HashMap();
+            myMap.put(length, IPAddress);
+            output.writeObject(myMap);  //-------sends the ip address
+            //output.writeShort(length);      //-------should send the lan length
             message = (String) input.readObject();
             System.out.println("Recieved: " + message);
             input.close();
