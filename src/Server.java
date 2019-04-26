@@ -57,8 +57,8 @@ public class Server {
 
 
 
-                 clientIPAddress = clientIPAddress.replaceAll("\\.", "");
-                 int fullAdd = Integer.parseInt(clientIPAddress);
+                 String clientIPAddress3 = clientIPAddress.replaceAll("\\.", "");
+                 int fullAdd = Integer.parseInt(clientIPAddress3);
                  String binaryAdd = Integer.toBinaryString(fullAdd);
                  System.out.println(binaryAdd);
                  String finalAddress = (String)binaryAdd;

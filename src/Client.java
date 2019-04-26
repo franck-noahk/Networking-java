@@ -34,7 +34,7 @@ public class Client {
 
 
             byte[] mac = network.getHardwareAddress();
-
+            System.out.println(args[0]);
             System.out.print("Current MAC address : ");
 
             StringBuilder sb = new StringBuilder();
@@ -53,9 +53,11 @@ public class Client {
 
         Client client = new Client();
         try{
-            client.runclient(args[1],subnetMaskLength,IPAddress);
+            client.runclient(args[0],subnetMaskLength,IPAddress);
+
         }catch (ArrayIndexOutOfBoundsException x){
             client.runclient("127.0.0.1", subnetMaskLength, IPAddress);
+
         }
 
     }
@@ -74,9 +76,7 @@ public class Client {
             message = (String) input.readObject();
             System.out.println("Recieved: " + message);
             input.close();
-        } catch (ClassNotFoundException | ConnectException  id) {
-            System.out.println("Exception thrown");
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
