@@ -12,37 +12,35 @@ public class Server {
     private ObjectOutputStream output;
     private ObjectInputStream input;
     private String message;
-    private int totalNumberOfConnections = 0;
+    private static int totalNumberOfConnections = 0;
     private int totalNumberOfErrorConnections = 0;
     public void runServer() {
         System.out.println("Running Server on \n");
             try {
-                while (totalNumberOfConnections < 5 && totalNumberOfErrorConnections < 3) {
-                    server = new ServerSocket(12345, 100);
-                    totalNumberOfConnections += 1;
-                    connection = server.accept();
-                    output = new ObjectOutputStream(connection.getOutputStream());
-                    input = new ObjectInputStream(connection.getInputStream());
-                    //------------needs to see if connected computer is on the same network
+                server = new ServerSocket(12345, 100);
+                connection = server.accept();
+                output = new ObjectOutputStream(connection.getOutputStream());
+                input = new ObjectInputStream(connection.getInputStream());
+                //------------needs to see if connected computer is on the same network
 
-                    String message = (String) input.readObject();
-                    System.out.println(message);
-                    //
-                    output.writeObject("welcome to my server");     //Writing to the screen and message
+                String message = (String) input.readObject();
+                System.out.println(message);
+                //
+                output.writeObject("welcome to my server");     //Writing to the screen and message
 
-                    System.out.println("Number of Connections: " + totalNumberOfConnections);
-                    output.flush();
-                    output.close();
-                }
-            } catch (IOException e){
+                System.out.println("Number of Connections: " + totalNumberOfConnections);
+            } catch (IOException e) {
                 System.out.println("IO exception\n" + e.getMessage());
-            }catch(ClassNotFoundException ex) {
+            } catch (ClassNotFoundException ex) {
                 System.out.println(" class not found eception ");
             }
+            totalNumberOfConnections ++;
     }
 
     public static void main(String[] args) {
-        Server server = new Server();
-        server.runServer();
+        while(totalNumberOfConnections < 5) {
+            Server server = new Server();
+            server.runServer();
+        }
     }
 }
