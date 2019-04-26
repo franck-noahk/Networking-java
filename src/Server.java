@@ -21,13 +21,17 @@ public class Server {
                 connection = server.accept();
                 output = new ObjectOutputStream(connection.getOutputStream());
                 input = new ObjectInputStream(connection.getInputStream());
+
+
                 //------------needs to see if connected computer is on the same network
 
                 String message = (String) input.readObject();
                 System.out.println(message);
-                //
-                output.writeObject("welcome to my server");     //Writing to the screen and message
 
+                //-----------Right now it just prints exactly what it recieves to the command line
+
+
+                output.writeObject("welcome to my server");     //Writing to the screen and message
                 System.out.println("Number of Connections: " + totalNumberOfConnections);
             } catch (IOException e) {
                 System.out.println("IO exception\n" + e.getMessage());
