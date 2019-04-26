@@ -55,9 +55,27 @@ public class Server {
                      clientIPAddress = (String) entry.getValue();
                  }
 
+
+
+                 clientIPAddress = clientIPAddress.replaceAll("\\.", "");
+                 int fullAdd = Integer.parseInt(clientIPAddress);
+                 String binaryAdd = Integer.toBinaryString(fullAdd);
+                 System.out.println(binaryAdd);
+                 String finalAddress = (String)binaryAdd;
+                 finalAddress = finalAddress.substring(0,clientLength);
+                 System.out.println(finalAddress);
+
+
+                 IPAddress = IPAddress.replaceAll("\\.", "");
+                 int fulladd1 = Integer.parseInt(IPAddress);
+                 String binaryAdd1 = Integer.toBinaryString(fulladd1);
+
+                 String finalAddress1 = (String)binaryAdd1;
+                 finalAddress1 = finalAddress1.substring(0,length);
+                 System.out.println(finalAddress1);
                  // checking
 
-                 if (clientLength == length) {
+                 if (finalAddress.equals(finalAddress1)) {
                      output.writeObject("You are on my LAN, Welcome home young jedi");     //Writing to the screen and messagev
                  }else{
                      output.writeObject("You are not on my LAN, Begone!");
