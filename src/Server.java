@@ -13,17 +13,23 @@ public class Server {
     private ObjectInputStream input;
     private String message;
     private int totalNumberOfConnections = 0;
-
+    private int totalNumberOfErrorConnections = 0;
     public void runServer() {
         System.out.println("Running Server on \n");
-        try {
-            server = new ServerSocket(12345, 100);
-            while(true){
+            try {
+                server = new ServerSocket(12345, 100);
+                totalNumberOfConnections += 1;
                 connection = server.accept();
                 output = new ObjectOutputStream(connection.getOutputStream());
                 input = new ObjectInputStream(connection.getInputStream());
+                //------------needs to see if connected computer is on the same network
+
+                String message = (String) input.readObject();
+                System.out.println(message);
+                //
                 output.writeObject("welcome to my server");     //Writing to the screen and message
-                totalNumberOfConnections += 1; System.out.println("Number of Connections: "+ totalNumberOfConnections);
+
+                System.out.println("Number of Connections: " + totalNumberOfConnections);
                 output.flush();
                 //try {
                 //   message=(String) input.readObject();total += 1; System.out.println("Number of Connections: "+ total);
@@ -33,11 +39,13 @@ public class Server {
                 // System.out.println("recieved: " + message);
                 input.close();
                 output.close();
+            } catch (IOException e){
+                System.out.println("IO exception");
+                totalNumberOfErrorConnections++;
+            }catch(ClassNotFoundException ex) {
+                System.out.println(" class not found eception ");
+                totalNumberOfErrorConnections++;
             }
-        } catch (IOException ex) {
-            Logger.getLogger(com.noahfranck.Server.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
     }
 
     public static void main(String[] args) {

@@ -44,7 +44,12 @@ public class Client {
         //-----------------------------------------end of code from teacher---------------------------------------------
 
         Client client = new Client();
-        client.runclient(args[1],StringB);
+        try{
+            client.runclient(args[1],StringB);
+        }catch (ArrayIndexOutOfBoundsException x){
+            client.runclient("127.0.0.1", StringB);
+        }
+
     }
 
 
@@ -53,12 +58,13 @@ public class Client {
             client = new Socket(commandline, 12345);
             output = new ObjectOutputStream(client.getOutputStream());
             input = new ObjectInputStream(client.getInputStream());
+            output.writeObject(macAddress);
             message = (String) input.readObject();
             System.out.println("Recieved: " + message);
             input.close();
+        } catch (ClassNotFoundException | ConnectException  id) {
+            System.out.println("Exception thrown");
         } catch (IOException e) {
-            e.printStackTrace();
-        } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
     }
